@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Fornecedor {
+  id        String   @id @default(cuid())
+  cnpj      String   @unique
+  nome      String
+  notas     Nota[]
+  createdAt DateTime @default(now())
+}
+
+model Nota {
+  id            String     @id @default(cuid())
+  chaveAcesso   String     @unique
+  numero        String
+  dataEmissao   DateTime
+  valorTotal    Float
+  fornecedor    Fornecedor @relation(fields: [fornecedorId], references: [id])
+  fornecedorId  String
+  itens         Item[]
+  createdAt     DateTime   @default(now())
+}
+
+model Item {
+  id          String     @id @default(cuid())
+  descricao   String
+  quantidade  Float
+  valorUnit   Float
+  valorTotal  Float
+  categoria   String?
+  nota        Nota       @relation(fields: [notaId], references: [id])
+  notaId      String
+}
